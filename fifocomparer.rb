@@ -6,6 +6,7 @@
 #  A folder where 'imagemagick' is located (the exe magick)
  
 require 'fileutils'
+require 'open3'
 
 class FifoComparer
 	def initialize(dolphin_dir_1, dolphin_dir_2, fifo_log_dir, magick_folder)
@@ -75,7 +76,15 @@ class FifoComparer
 		
 			pngs_in_first_dir.each do |file|
 				file_name = File.basename(file)
-				`#{File.join(@magick_folder, "magick")} composite #{File.join(first_dir, file_name)} #{File.join(second_dir, file_name)} -compose difference #{File.join(comparison_dir, file_name)} `
+				
+				image_comparison_cmd = "#{File.join(@magick_folder, "magick")} compare -metric ae #{File.join(first_dir, file_name)} #{File.join(second_dir, file_name)} null:"
+				Open3.popen3(image_comparison_cmd) do |stdin, stdout, stderr, wait_thr|
+					pixel_count = stderr.read.to_i
+					if (pixel_count > 0)
+						puts "Found difference for image '#{file_name}' using fifo log '#{fifo_name}' on backend '#{backend}'"
+						`#{File.join(@magick_folder, "magick")} composite #{File.join(first_dir, file_name)} #{File.join(second_dir, file_name)} -compose difference #{File.join(comparison_dir, file_name)} `
+					end
+				end
 			end
 		end
 	end
