@@ -13,6 +13,7 @@ After running, you will see Dolphin pop up multiple times as it runs through you
 
 Here's an example of what it might look like:
 
+```
 Results /
   <game-name>.dff /
     D3D /
@@ -48,3 +49,4 @@ Comparisons /
     Vulkan /
       framedump_1.png
       framedump_2.png
+```
