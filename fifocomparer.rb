@@ -13,8 +13,6 @@ class FifoComparer
 		@backends = ["D3D", "OGL", "Vulkan"]
 		@dolphin_dirs = [] << dolphin_dir_1 << dolphin_dir_2
 		@directories_to_ignore = ["..", "."]
-		puts "#{fifo_log_dir}"
-		puts "#{File.join(fifo_log_dir, "*.dff")}"
 		@fifo_files = Dir.glob(File.join(fifo_log_dir, "*.dff"))
 		@magick_folder = magick_folder
 		@config_location = File.join(get_root, "Config")
